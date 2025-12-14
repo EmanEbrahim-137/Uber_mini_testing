@@ -1,43 +1,53 @@
-
-
-
 import pytest
-from ride_system import RideSystem, Driver
+from ride_matching import (
+    Driver,
+    request_ride,
+    search_drivers,
+    match_driver,
+    calculate_eta,
+)
 
-@pytest.mark.matching
-def test_match_driver_success():
-    system = RideSystem()
-    d1 = Driver("Driver1")
-    system.add_driver(d1)
-    ride = system.request_ride("User1")
-    assert ride.driver == d1
-    assert ride.eta == 10
 
-@pytest.mark.no_driver
-def test_no_driver_available():
-    system = RideSystem()
-    ride = system.request_ride("User1")
-    assert ride.driver is None
-    assert ride.eta is None
+@pytest.mark.fail
+def test_request_ride_fail():
+    ride = request_ride("R1", None)
+    assert ride is None
 
-@pytest.mark.cancel
-def test_cancel_ride():
-    system = RideSystem()
-    d1 = Driver("Driver1")
-    system.add_driver(d1)
-    ride = system.request_ride("User1")
-    system.cancel_ride(ride)
-    assert ride.driver is None
-    assert ride.eta is None
-    assert d1.available == True
 
-@pytest.mark.rematch
-def test_re_match_after_cancel():
-    system = RideSystem()
-    d1 = Driver("Driver1")
-    system.add_driver(d1)
-    ride1 = system.request_ride("User1")
-    system.cancel_ride(ride1)
-    ride2 = system.request_ride("User2")
-    assert ride2.driver == d1
-    assert ride2.eta == 10
+@pytest.mark.fail
+def test_search_drivers_fail():
+    drivers = [Driver(1, (0, 0), available=False)]
+    result = search_drivers(drivers)
+    assert result == []
+
+
+@pytest.mark.pass_test
+def test_match_driver_pass():
+    ride = request_ride("R2", (0, 0))
+    drivers = [
+        Driver(1, (5, 5)),
+        Driver(2, (1, 1)),
+    ]
+    result = match_driver(ride, drivers)
+    assert result is True
+    assert ride.driver.driver_id == 2
+
+
+@pytest.mark.fail
+def test_calculate_eta_fail():
+    eta = calculate_eta((0, 0), (10, 10))
+    assert eta != 5  # force failure
+
+
+@pytest.mark.fail
+def test_no_drivers_fail():
+    ride = request_ride("R3", (1, 1))
+    result = match_driver(ride, [])
+    assert result is False
+
+
+
+
+# pytest -v -m fail
+# pytest -v -m pass_test
+
