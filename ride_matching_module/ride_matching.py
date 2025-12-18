@@ -1,7 +1,7 @@
 class Driver:
     def __init__(self, driver_id, location, available=True):
         self.driver_id = driver_id
-        self.location = location  # (x, y)
+        self.location = location
         self.available = available
 
 
@@ -45,4 +45,4 @@ def match_driver(ride, drivers):
 
 def calculate_eta(driver_location, pickup_location):
     distance = calculate_distance(driver_location, pickup_location)
-    return round(distance * 2)  # simple ETA logic
+    return round(distance * 2)  

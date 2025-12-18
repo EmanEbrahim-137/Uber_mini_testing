@@ -10,9 +10,7 @@ from user_module_functions import (
 def users_db():
     return {}
 
-# -------------------
 # Password Tests
-# -------------------
 
 def test_hash_password_success():
     hashed = hash_password("12345678")
@@ -33,13 +31,10 @@ def test_verify_password_correct():
 @pytest.mark.xfail(reason="Intentional fail: verifying wrong password incorrectly")
 def test_verify_password_wrong():
     hashed = hash_password("password")
-    # intentional fail: assert True instead of False
-    assert verify_password("wrong", hashed)  # هذا سيظهر كـ xfail
+    assert verify_password("wrong", hashed) 
 
 
-# -------------------
 # Register Tests
-# -------------------
 
 def test_register_user_success(users_db):
     user = register_user("test@test.com", "12345678", users_db)
@@ -50,19 +45,15 @@ def test_register_user_success(users_db):
 @pytest.mark.xfail(reason="Intentional fail: registering existing user incorrectly")
 def test_register_existing_user(users_db):
     register_user("test@test.com", "12345678", users_db)
-    # intentional fail: not using raises → سيظهر xfail
     register_user("test@test.com", "12345678", users_db)
 
 
 @pytest.mark.xfail(reason="Intentional fail: missing data not raising error")
 def test_register_missing_data(users_db):
-    # intentional fail: ignoring exception
     register_user("", "12345678", users_db)
 
 
-# -------------------
 # Login Tests
-# -------------------
 
 def test_login_success(users_db):
     register_user("test@test.com", "12345678", users_db)
@@ -76,5 +67,4 @@ def test_login_wrong_password(users_db):
 
 @pytest.mark.xfail(reason="Intentional fail: user not found returns True incorrectly")
 def test_login_user_not_found(users_db):
-    # intentional fail: assert True instead of False
     assert login_user("notfound@test.com", "123", users_db)

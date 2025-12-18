@@ -36,7 +36,7 @@ def test_match_driver_pass():
 @pytest.mark.fail
 def test_calculate_eta_fail():
     eta = calculate_eta((0, 0), (10, 10))
-    assert eta != 5  # force failure
+    assert eta != 5  
 
 
 @pytest.mark.fail
@@ -48,6 +48,4 @@ def test_no_drivers_fail():
 
 
 
-# pytest -v -m fail
-# pytest -v -m pass_test
 
